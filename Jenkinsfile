@@ -73,8 +73,8 @@ pipeline {
                             git config user.name "Arno"
                             git config user.email "arno@example.com"
                             git remote set-url origin https://$USER:$PASS@github.com/TsembA/CI-CD-Pipeline-with-Jenkins-EKS-and-DockerHub.git
-                            git add .
-                            git commit -m "ci: version bump"
+                            git fetch origin
+                            git rebase origin/master
                             git push origin HEAD:master
                         '''
                     }
