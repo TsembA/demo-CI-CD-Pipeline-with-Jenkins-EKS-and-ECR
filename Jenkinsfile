@@ -5,7 +5,7 @@ pipeline {
 
     environment {
         DOCKER_REPO_SERVER = '471112626077.dkr.ecr.us-west-1.amazonaws.com'
-        DOCKER_REPO = '${DOCKER_REPO_SERVER}/java-maven-app'
+        DOCKER_REPO = "${DOCKER_REPO_SERVER}/java-maven-app"
         
     }
 
