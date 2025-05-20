@@ -1,9 +1,9 @@
-# 🚀 Demo Project: Complete CI/CD Pipeline with EKS & Private Docker Hub Registry
+# 🚀 Demo Project: Complete CI/CD Pipeline with EKS & AWS ECR Registry
 
 ## 🔧 Technologies Used
 
 * **CI/CD**: Jenkins, Groovy (Declarative Pipeline)
-* **Containerization**: Docker, Docker Hub (private registry)
+* **Containerization**: Docker, Amazon Elastic Container Registry (ECR)
 * **Orchestration**: Kubernetes (Amazon EKS)
 * **Build Tools**: Java, Maven
 * **Infrastructure**: AWS IAM, kubectl, AWS CLI
@@ -14,7 +14,7 @@
 
 ## 📦 Project Overview
 
-This project demonstrates a full **CI/CD pipeline** for deploying a Java Maven application into a **Kubernetes cluster (EKS)** using Jenkins and Docker Hub as a private container registry. The pipeline automates everything from version bumping, building, image publishing, to production deployment and Git commit syncing.
+This project demonstrates a full **CI/CD pipeline** for deploying a Java Maven application into a **Kubernetes cluster (EKS)** using Jenkins and **Amazon ECR** as a private container registry. The pipeline automates everything from version bumping, building, image publishing, to production deployment and Git commit syncing.
 
 ---
 
@@ -34,7 +34,7 @@ This project demonstrates a full **CI/CD pipeline** for deploying a Java Maven a
 3. **Build & Push Docker Image**
 
    * Docker image is built from the compiled artifact.
-   * Image is tagged and pushed to a **private Docker Hub** repository using Jenkins credentials.
+   * Image is tagged and pushed to a **private AWS ECR** repository using Jenkins credentials and ECR login.
 
 ### ✅ CD Stages
 
@@ -54,7 +54,7 @@ This project demonstrates a full **CI/CD pipeline** for deploying a Java Maven a
 
 ## 🔐 Authentication & Security
 
-* **Docker Hub**: Uses Jenkins `usernamePassword` credentials for private image registry login.
+* **Amazon ECR**: Uses Jenkins `usernamePassword` credentials for ECR registry login via Docker CLI.
 * **GitHub**: Uses a PAT stored in Jenkins credentials for authenticated Git push.
 * **AWS**: Uses IAM credentials to authenticate and interact with the EKS cluster.
 
@@ -64,7 +64,6 @@ This project demonstrates a full **CI/CD pipeline** for deploying a Java Maven a
 
 * `kubernetes/deployment.yaml`: Defines deployment resource with `image: $DOCKER_REPO:$IMAGE_NAME`
 * `kubernetes/service.yaml`: Exposes the app using a `LoadBalancer` service (EKS-compatible)
-* Includes support for image pull secrets if using a private registry
 
 ---
 
@@ -74,7 +73,7 @@ This project demonstrates a full **CI/CD pipeline** for deploying a Java Maven a
 | ----------------------- | ---- | --------------------------------------------------------- |
 | `increment version`     | CI   | Bump application version using Maven helper plugins       |
 | `build app`             | CI   | Compile and package the Java Maven application            |
-| `build image`           | CI   | Build Docker image and push to Docker Hub (private)       |
+| `build image`           | CI   | Build Docker image and push to AWS ECR (private)          |
 | `deploy to K8s EKS`     | CD   | Deploy new Docker image to AWS EKS via dynamic manifests  |
 | `commit version update` | CD   | Push updated `pom.xml` with bumped version back to GitHub |
 
@@ -88,7 +87,7 @@ This project demonstrates a full **CI/CD pipeline** for deploying a Java Maven a
 * Install tools in container: Docker, kubectl, aws CLI, aws-iam-authenticator.
 * Configure credentials:
 
-  * Docker Hub: `docker-hub-credentials`
+  * AWS ECR: `aws-ecr-credentials`
   * GitHub PAT: `github-credentials`
   * AWS IAM: `aws_access_key_id` / `aws_secret_access_key`
 
@@ -96,7 +95,7 @@ This project demonstrates a full **CI/CD pipeline** for deploying a Java Maven a
 
 * Create an EKS cluster using `eksctl` and generate the kubeconfig.
 * Copy kubeconfig into `/var/jenkins_home/.kube/config` inside Jenkins container.
-* (Optional) Create `imagePullSecrets` for private Docker registry access.
+* (Optional) Configure appropriate `imagePullSecrets` if needed.
 
 ### 3. Prepare Application Repository
 
@@ -113,7 +112,7 @@ This project demonstrates a full **CI/CD pipeline** for deploying a Java Maven a
 1. Jenkins pulls source from GitHub.
 2. `increment version`: Maven updates version in `pom.xml`
 3. `build app`: Builds `.jar` file
-4. `build image`: Builds and pushes image to Docker Hub
+4. `build image`: Builds and pushes image to AWS ECR
 5. `deploy to K8s EKS`: Uses `kubectl` to apply YAMLs to EKS
 6. `commit version update`: Commits updated `pom.xml` to GitHub
 
