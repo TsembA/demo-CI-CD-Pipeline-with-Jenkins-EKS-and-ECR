@@ -72,11 +72,13 @@ pipeline {
                         sh '''
                             git config user.name "Arno"
                             git config user.email "arno@example.com"
-                            git remote set-url origin https://$USER:$PASS@github.com/TsembA/CI-CD-Pipeline-with-Jenkins-EKS-and-DockerHub.git
-                            git fetch origin
-                            git rebase origin/master
+                            git remote set-url origin https://$USER:$PASS@github.com/TsembA/demo-CI-CD-Pipeline-with-Jenkins-EKS-and-ECR.git
+
                             git add .
                             git commit -m "ci: version bump" || echo "No changes to commit"
+
+                            git fetch origin
+                            git rebase origin/master || echo "No rebase needed"
                             git push origin HEAD:master
                         '''
 
