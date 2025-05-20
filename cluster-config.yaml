@@ -1,0 +1,15 @@
+# Cluster config file. 
+
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: k8s-ECR-cluster
+  region: us-west-1
+
+nodeGroups:
+  - name: upgraded-nodes
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 4
