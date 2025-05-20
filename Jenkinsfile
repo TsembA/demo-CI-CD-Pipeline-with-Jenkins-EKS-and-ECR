@@ -75,8 +75,11 @@ pipeline {
                             git remote set-url origin https://$USER:$PASS@github.com/TsembA/CI-CD-Pipeline-with-Jenkins-EKS-and-DockerHub.git
                             git fetch origin
                             git rebase origin/master
+                            git add .
+                            git commit -m "ci: version bump" || echo "No changes to commit"
                             git push origin HEAD:master
                         '''
+
                     }
                 }
             }
